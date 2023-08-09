@@ -12,6 +12,8 @@ import * as passport from 'passport'
 import * as cookieParser from 'cookie-parser'
 import { HttpApiExceptionFilter } from './common/exceptions/http-api-exception.filter'
 
+const { NODE_ENV, PORT, CORS_ORIGIN_LIST, SECRET_KEY, ADMIN_USER, ADMIN_PASSWORD } = process.env
+
 class Application {
   private logger = new Logger(Application.name)
   private DEV_MODE: boolean
@@ -23,14 +25,14 @@ class Application {
   constructor(private server: NestExpressApplication) {
     this.server = server
 
-    if (!process.env.SECRET_KEY) this.logger.error('Set "SECRET" env')
-    this.DEV_MODE = process.env.NODE_ENV === 'production' ? false : true
-    this.PORT = process.env.PORT
-    this.corsOriginList = process.env.CORS_ORIGIN_LIST
-      ? process.env.CORS_ORIGIN_LIST.split(',').map((origin) => origin.trim())
+    if (!SECRET_KEY) this.logger.error('Set "SECRET" env')
+    this.DEV_MODE = NODE_ENV === 'production' ? false : true
+    this.PORT = PORT
+    this.corsOriginList = CORS_ORIGIN_LIST
+      ? CORS_ORIGIN_LIST.split(',').map((origin) => origin.trim())
       : ['*']
-    this.ADMIN_USER = process.env.ADMIN_USER
-    this.ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
+    this.ADMIN_USER = ADMIN_USER
+    this.ADMIN_PASSWORD = ADMIN_PASSWORD
   }
 
   private setUpBasicAuth() {
